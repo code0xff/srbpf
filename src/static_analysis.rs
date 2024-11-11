@@ -10,7 +10,7 @@ use crate::{
     vm::{ContextObject, DynamicAnalysis, TestContextObject},
 };
 use alloc::{
-    collections::{BTreeMap, BTreeSet, HashMap, HashSet},
+    collections::{BTreeMap, BTreeSet},
     format,
     string::{String, ToString},
     vec,
@@ -545,7 +545,7 @@ impl<'a> Analysis<'a> {
             dynamic_analysis: Option<&DynamicAnalysis>,
             analysis: &Analysis,
             function_range: core::ops::Range<usize>,
-            alias_nodes: &mut HashSet<usize>,
+            alias_nodes: &mut BTreeSet<usize>,
             cfg_node_start: usize,
         ) -> core2::io::Result<()> {
             let cfg_node = &analysis.cfg_nodes[&cfg_node_start];
@@ -617,7 +617,7 @@ impl<'a> Analysis<'a> {
             } else {
                 self.instructions.last().unwrap().ptr + 1
             };
-            let mut alias_nodes = HashSet::new();
+            let mut alias_nodes = BTreeSet::new();
             writeln!(output, "  subgraph cluster_{} {{", *function_start)?;
             writeln!(
                 output,
@@ -918,12 +918,14 @@ impl<'a> Analysis<'a> {
     }
 
     /// Connect the dependencies between the instructions inside of the basic blocks
-    pub fn intra_basic_block_data_flow(&mut self) -> BTreeMap<usize, HashMap<DataResource, usize>> {
+    pub fn intra_basic_block_data_flow(
+        &mut self,
+    ) -> BTreeMap<usize, BTreeMap<DataResource, usize>> {
         fn bind(
             state: &mut (
                 usize,
                 BTreeMap<DfgNode, BTreeSet<DfgEdge>>,
-                HashMap<DataResource, usize>,
+                BTreeMap<DataResource, usize>,
             ),
             insn: &ebpf::Insn,
             is_output: bool,
@@ -950,7 +952,7 @@ impl<'a> Analysis<'a> {
                 state.2.insert(resource, insn.ptr);
             }
         }
-        let mut state = (0, BTreeMap::new(), HashMap::new());
+        let mut state = (0, BTreeMap::new(), BTreeMap::new());
         let data_dependencies = self
             .cfg_nodes
             .iter()
@@ -1098,7 +1100,7 @@ impl<'a> Analysis<'a> {
                         _ => {}
                     }
                 }
-                let mut deps = HashMap::new();
+                let mut deps = BTreeMap::new();
                 core::mem::swap(&mut deps, &mut state.2);
                 (*basic_block_start, deps)
             })
@@ -1110,7 +1112,7 @@ impl<'a> Analysis<'a> {
     /// Connect the dependencies inbetween the basic blocks
     pub fn inter_basic_block_data_flow(
         &mut self,
-        basic_block_outputs: BTreeMap<usize, HashMap<DataResource, usize>>,
+        basic_block_outputs: BTreeMap<usize, BTreeMap<DataResource, usize>>,
     ) {
         let mut continue_propagation = true;
         while continue_propagation {
