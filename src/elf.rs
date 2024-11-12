@@ -1119,19 +1119,19 @@ impl<C: ContextObject> Executable<C> {
         Ok(())
     }
 
-    // #[allow(dead_code)]
-    // fn dump_data(name: &str, prog: &[u8]) {
-    //     let mut eight_bytes: Vec<u8> = Vec::new();
-    //     println!("{name}");
-    //     for i in prog.iter() {
-    //         if eight_bytes.len() >= 7 {
-    //             println!("{eight_bytes:02X?}");
-    //             eight_bytes.clear();
-    //         } else {
-    //             eight_bytes.push(*i);
-    //         }
-    //     }
-    // }
+    #[allow(dead_code)]
+    fn dump_data(name: &str, prog: &[u8]) {
+        let mut eight_bytes: Vec<u8> = Vec::new();
+        log::info!("{name}");
+        for i in prog.iter() {
+            if eight_bytes.len() >= 7 {
+                log::info!("{eight_bytes:02X?}");
+                eight_bytes.clear();
+            } else {
+                eight_bytes.push(*i);
+            }
+        }
+    }
 }
 
 pub(crate) fn get_ro_region(ro_section: &Section, elf: &[u8]) -> MemoryRegion {

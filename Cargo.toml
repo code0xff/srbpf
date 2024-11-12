@@ -9,6 +9,7 @@ include = ["src/**"]
 byteorder = { version = "1.5.0", default-features = false }
 core2 = { version = "0.4.0", default-features = false }
 hash32 = "0.2.1"
+log = { version = "0.4.22", default-features = false }
 rustc-demangle = { version = "0.1.24", default-features = false }
 thiserror = { version = "2.0.3", default-features = false }
 
@@ -17,6 +18,7 @@ default = ["std"]
 std = [
     "byteorder/std",
     "core2/std",
+    "log/std",
     "rustc-demangle/std",
     "thiserror/std",
 ]
