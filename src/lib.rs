@@ -9,9 +9,6 @@
 // the MIT license <http://opensource.org/licenses/MIT>, at your option. This file may not be
 // copied, modified, or distributed except according to those terms.
 
-#![warn(missing_docs)]
-#![no_std]
-
 extern crate alloc;
 
 pub mod aligned_memory;
@@ -20,10 +17,13 @@ pub mod ebpf;
 pub mod elf;
 pub mod elf_parser;
 pub mod error;
+#[cfg(test)]
+pub mod fuzz;
 pub mod interpreter;
 pub mod memory_region;
 pub mod program;
 pub mod static_analysis;
+pub mod syscalls;
 pub mod verifier;
 pub mod vm;
 

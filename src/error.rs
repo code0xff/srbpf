@@ -138,11 +138,7 @@ impl<T: core::fmt::Debug, E: core::fmt::Debug> StableResult<T, E> {
     }
 
     #[cfg_attr(
-        any(
-            not(feature = "jit"),
-            target_os = "windows",
-            not(target_arch = "x86_64")
-        ),
+        any(target_os = "windows", not(target_arch = "x86_64")),
         allow(dead_code)
     )]
     pub(crate) fn discriminant(&self) -> u64 {

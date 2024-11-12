@@ -1,13 +1,19 @@
 [package]
 name = "srbpf"
 version = "0.1.0"
+description = "Virtual machine for eBPF programs"
+license = "Apache-2.0"
 edition = "2021"
 
-include = ["src/**"]
+include = [
+    "src/**", 
+    "Cargo.toml"
+]
 
 [dependencies]
 byteorder = { version = "1.5.0", default-features = false }
 core2 = { version = "0.4.0", default-features = false }
+gdbstub = { version = "0.7.3", default-features = false, optional = true }
 hash32 = "0.2.1"
 log = { version = "0.4.22", default-features = false }
 rustc-demangle = { version = "0.1.24", default-features = false }
@@ -22,3 +28,8 @@ std = [
     "rustc-demangle/std",
     "thiserror/std",
 ]
+debugger = ["gdbstub"]
+
+[dev-dependencies]
+rand = "0.8.5"
+test_utils = { path = "test_utils/" }

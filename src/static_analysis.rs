@@ -1,8 +1,8 @@
 #![allow(clippy::arithmetic_side_effects)]
 //! Static Byte Code Analysis
 
-use crate::disassembler::disassemble_instruction;
 use crate::{
+    disassembler::disassemble_instruction,
     ebpf,
     elf::Executable,
     error::EbpfError,

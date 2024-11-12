@@ -24,30 +24,6 @@ use crate::{
 use alloc::{collections::BTreeMap, sync::Arc, vec, vec::Vec};
 use core::fmt::Debug;
 
-// #[cfg(not(feature = "shuttle-test"))]
-// use {
-//     rand::{thread_rng, Rng},
-//     std::sync::Arc,
-// };
-
-// #[cfg(feature = "shuttle-test")]
-// use shuttle::{
-//     rand::{thread_rng, Rng},
-//     sync::Arc,
-// };
-
-/// Shift the RUNTIME_ENVIRONMENT_KEY by this many bits to the LSB
-///
-/// 3 bits for 8 Byte alignment, and 1 bit to have encoding space for the RuntimeEnvironment.
-const PROGRAM_ENVIRONMENT_KEY_SHIFT: u32 = 4;
-// static RUNTIME_ENVIRONMENT_KEY: std::sync::OnceLock<i32> = std::sync::OnceLock::<i32>::new();
-
-// /// Returns (and if not done before generates) the encryption key for the VM pointer
-// pub fn get_runtime_environment_key() -> i32 {
-//     *RUNTIME_ENVIRONMENT_KEY
-//         .get_or_init(|| thread_rng().gen::<i32>() >> PROGRAM_ENVIRONMENT_KEY_SHIFT)
-// }
-
 /// VM configuration settings
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Config {
@@ -233,7 +209,7 @@ pub struct CallFrame {
 /// # Examples
 ///
 /// ```
-/// use solana_rbpf::{
+/// use srbpf::{
 ///     aligned_memory::AlignedMemory,
 ///     ebpf,
 ///     elf::Executable,
@@ -395,18 +371,7 @@ impl<'a, C: ContextObject> EbpfVm<'a, C> {
             #[cfg(not(feature = "debugger"))]
             while interpreter.step() {}
         } else {
-            #[cfg(all(feature = "jit", not(target_os = "windows"), target_arch = "x86_64"))]
-            {
-                let compiled_program = match executable
-                    .get_compiled_program()
-                    .ok_or_else(|| EbpfError::JitNotCompiled)
-                {
-                    Ok(compiled_program) => compiled_program,
-                    Err(error) => return (0, ProgramResult::Err(error)),
-                };
-                compiled_program.invoke(config, self, self.registers);
-            }
-            #[cfg(not(all(feature = "jit", not(target_os = "windows"), target_arch = "x86_64")))]
+            #[cfg(not(all(not(target_os = "windows"), target_arch = "x86_64")))]
             {
                 return (0, ProgramResult::Err(EbpfError::JitNotCompiled));
             }
@@ -425,12 +390,7 @@ impl<'a, C: ContextObject> EbpfVm<'a, C> {
     /// Invokes a built-in function
     pub fn invoke_function(&mut self, function: BuiltinFunction<C>) {
         function(
-            unsafe {
-                core::ptr::addr_of_mut!(*self)
-                    .cast::<u64>()
-                    .offset(get_runtime_environment_key() as isize)
-                    .cast::<Self>()
-            },
+            self,
             self.registers[1],
             self.registers[2],
             self.registers[3],
