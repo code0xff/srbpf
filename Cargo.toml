@@ -5,11 +5,7 @@ description = "Virtual machine for eBPF programs"
 license = "Apache-2.0"
 edition = "2021"
 
-include = [
-    "src/**",
-    "examples/**",
-    "Cargo.toml",
-]
+include = ["src/**", "examples/**", "benches/**", "Cargo.toml"]
 
 [dependencies]
 byteorder = { version = "1.5.0", default-features = false }
@@ -19,6 +15,12 @@ hash32 = "0.2.1"
 log = { version = "0.4.22", default-features = false }
 rustc-demangle = { version = "0.1.24", default-features = false }
 thiserror = { version = "2.0.3", default-features = false }
+
+[dev-dependencies]
+elf = "0.7.4"
+json = "0.12.4"
+rand = { version = "0.8.5", features = ["small_rng"] }
+test_utils = { path = "test_utils/" }
 
 [features]
 default = ["std"]
@@ -30,9 +32,3 @@ std = [
     "thiserror/std",
 ]
 debugger = ["gdbstub"]
-
-[dev-dependencies]
-elf = "0.7.4"
-json = "0.12.4"
-rand = "0.8.5"
-test_utils = { path = "test_utils/" }
