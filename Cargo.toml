@@ -6,8 +6,9 @@ license = "Apache-2.0"
 edition = "2021"
 
 include = [
-    "src/**", 
-    "Cargo.toml"
+    "src/**",
+    "examples/**",
+    "Cargo.toml",
 ]
 
 [dependencies]
@@ -31,5 +32,7 @@ std = [
 debugger = ["gdbstub"]
 
 [dev-dependencies]
+elf = "0.7.4"
+json = "0.12.4"
 rand = "0.8.5"
 test_utils = { path = "test_utils/" }

@@ -36,6 +36,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "elf"
+version = "0.7.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4445909572dbd556c457c849c4ca58623d84b27c8fff1e74b0b4227d8b90d17b"
+
+[[package]]
 name = "gdbstub"
 version = "0.7.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -68,6 +74,12 @@ checksum = "b0c35f58762feb77d74ebe43bdbc3210f09be9fe6742234d573bacc26ed92b67"
 dependencies = [
  "byteorder",
 ]
+
+[[package]]
+name = "json"
+version = "0.12.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "078e285eafdfb6c4b434e0d31e8cfcb5115b651496faca5749b88fafd4f23bfd"
 
 [[package]]
 name = "libc"
@@ -177,8 +189,10 @@ version = "0.1.0"
 dependencies = [
  "byteorder",
  "core2",
+ "elf",
  "gdbstub",
  "hash32",
+ "json",
  "log",
  "rand",
  "rustc-demangle",
