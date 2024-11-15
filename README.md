@@ -15,7 +15,7 @@ To use `srbpf` in your `no_std` project, add the following to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-srbpf = { git = "https://github.com/code0xff/srbpf" }
+srbpf = { git = "https://github.com/code0xff/srbpf", default-features = false }
 ```
 
 Ensure that your project is also configured to work in a `no_std` environment, as `srbpf` has been designed specifically for this use case.
